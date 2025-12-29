@@ -23,12 +23,6 @@ Mobile Application Development Course Assignment - Group 7
 mysql -u root -p < UserDB.sql
 ```
 
-**Method C: MySQL Workbench Data Import**
-1. **Server** ? **Data Import**
-2. Select **Import from Self-Contained File**
-3. Browse and select `UserDB.sql`
-4. Click **Start Import**
-
 ### Configure Connection String
 
 Update your MySQL password in `Repository\Constants.cs`:
@@ -93,9 +87,4 @@ Contact team members for test user credentials.
 - Ensure JSON body is properly formatted
 
 ## Security Note
-
-?? **Educational project only.** Passwords are stored in plain text. For production, use password hashing and secure authentication.
-
-## Team Members
-
-Group 7 - Mobile Application Development (SA4108)
+**Educational project only.** Passwords are stored in plain text. For production, use password hashing and secure authentication.
