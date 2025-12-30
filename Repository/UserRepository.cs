@@ -34,6 +34,54 @@ namespace Gp7_CA.Repository
             }
             return user;
         }
+
+        public bool UpdateCompletionTime(int userId, double completionTime)
+        {
+            using (MySqlConnection conn = new MySqlConnection(Constants.CONNECTION_STRING))
+            {
+                conn.Open();
+                string sql = @"UPDATE User SET completionTime=@completionTime WHERE id=@userId";
+                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@userId", userId);
+                    cmd.Parameters.AddWithValue("@completionTime", completionTime);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    conn.Close();
+                    return rowsAffected > 0;
+                }
+            }
+        }
+
+        public List<User> GetLeaderboard(int limit = 10)
+        {
+            List<User> leaderboard = new List<User>();
+            using (MySqlConnection conn = new MySqlConnection(Constants.CONNECTION_STRING))
+            {
+                conn.Open();
+                string sql = @"SELECT * FROM User WHERE completionTime IS NOT NULL ORDER BY completionTime ASC LIMIT @limit";
+                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@limit", limit);
+
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        User user = new User
+                        {
+                            id = (int)reader["id"],
+                            username = (string)reader["username"],
+                            password = (string)reader["password"],
+                            completionTime = reader.GetDouble("completionTime"),
+                            isPaidUser = !reader.IsDBNull(reader.GetOrdinal("isPaidUser")) && reader.GetBoolean("isPaidUser")
+                        };
+                        leaderboard.Add(user);
+                    }
+                    conn.Close();
+                }
+            }
+            return leaderboard;
+        }
     }
 }
 

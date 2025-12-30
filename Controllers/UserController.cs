@@ -15,21 +15,77 @@ namespace Gp7_CA.Controllers
         [HttpPost]
         public IActionResult Authenticate([FromBody] User user)
         {
+            if (user == null)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Invalid request. Please provide username and password."
+                });
+            }
+
             var userDetails = _repository.AuthenticateUser(user.username, user.password);
 
-            if (userDetails != null) // Return 200 Ok status if user is valid  
+            if (userDetails != null)
                 return Ok(new
                 {
                     success = true,
                     message = $"Welcome {userDetails.username}",
-                    isPaidUser = $"{userDetails.isPaidUser}"
+                    userId = userDetails.id,
+                    isPaidUser = userDetails.isPaidUser,
+                    completionTime = userDetails.completionTime
                 });
 
-            // Return 401 Unauthorized if user is not valid
             return Unauthorized(new
             {
                 success = false,
                 message = "Invalid username or password"
+            });
+        }
+
+        [HttpPost("UpdateCompletionTime")]
+        public IActionResult UpdateCompletionTime([FromBody] CompletionTimeRequest request)
+        {
+            if (request == null || request.userId <= 0 || request.completionTime <= 0)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Invalid request. Provide valid userId and completionTime."
+                });
+            }
+
+            bool isUpdated = _repository.UpdateCompletionTime(request.userId, request.completionTime);
+
+            if (isUpdated)
+                return Ok(new
+                {
+                    success = true,
+                    message = "Completion time updated successfully"
+                });
+
+            return NotFound(new
+            {
+                success = false,
+                message = "User not found"
+            });
+        }
+
+        [HttpGet("Leaderboard")]
+        public IActionResult GetLeaderboard([FromQuery] int limit = 10)
+        {
+            var leaderboard = _repository.GetLeaderboard(limit);
+
+            return Ok(new
+            {
+                success = true,
+                count = leaderboard.Count,
+                leaderboard = leaderboard.Select(u => new
+                {
+                    username = u.username,
+                    completionTime = u.completionTime,
+                    isPaidUser = u.isPaidUser
+                })
             });
         }
 
@@ -38,5 +94,11 @@ namespace Gp7_CA.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+    }
+
+    public class CompletionTimeRequest
+    {
+        public int userId { get; set; }
+        public double completionTime { get; set; }
     }
 }

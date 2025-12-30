@@ -36,13 +36,12 @@ public static string CONNECTION_STRING = @"server=localhost;uid=root;pwd=YOUR_PA
 2. Press `F5` to build and run
 3. Application launches at `http://localhost:5107`
 
-## API Testing with Postman
+## API Endpoints
 
-**Endpoint:** `POST http://localhost:5107/User/Authenticate`
+### 1. User Authentication
+**POST** `http://localhost:5107/User/Authenticate`
 
-**Headers:** `Content-Type: application/json`
-
-**Request Body:**
+**Request:**
 ```json
 {
   "username": "testuser",
@@ -50,20 +49,61 @@ public static string CONNECTION_STRING = @"server=localhost;uid=root;pwd=YOUR_PA
 }
 ```
 
-**Success Response (200 OK):**
+**Response (200 OK):**
 ```json
 {
   "success": true,
   "message": "Welcome testuser",
-  "isPaidUser": "False"
+  "userId": 1,
+  "isPaidUser": false,
+  "completionTime": 0
 }
 ```
+
+### 2. Update Completion Time
+**POST** `http://localhost:5107/User/UpdateCompletionTime`
+
+**Request:**
+```json
+{
+  "userId": 1,
+  "completionTime": 45.5
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Completion time updated successfully"
+}
+```
+
+### 3. Get Leaderboard
+**GET** `http://localhost:5107/User/Leaderboard?limit=10`
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "count": 2,
+  "leaderboard": [
+    {"username": "user1", "completionTime": 30.5, "isPaidUser": false},
+    {"username": "user2", "completionTime": 45.2, "isPaidUser": true}
+  ]
+}
+```
+
+**Note:** All POST requests require `Content-Type: application/json` header.
+
 **Test Credentials:** Contact team members for user credentials.
 
 ## Troubleshooting
+
 - **Database Connection Failed:** Ensure MySQL is running and credentials in `Constants.cs` are correct
-- **NullReferenceException:** Verify `Content-Type: application/json` header is set in Postman
+- **NullReferenceException:** Verify `Content-Type: application/json` header is set
 - **Table Not Found:** Run `UserDB.sql` to create the database and tables
 
 ## Security Note
+
 ⚠️ Educational project only. Passwords stored in plain text. Use proper authentication for production.
