@@ -33,18 +33,17 @@ public static string CONNECTION_STRING = @"server=localhost;uid=root;pwd=YOUR_PA
 
 ## Running the Project
 
-1. Open `Gp7_CA.sln` in Visual Studio 2022
+1. Open `Gp7_CA.sln` in Visual Studio 
 2. Press `F5` to build and run
 
 The application will launch at:
-- **HTTPS**: `https://localhost:7023`
 - **HTTP**: `http://localhost:5107`
 
 ## Testing with Postman
 
 **Endpoint:**
 ```
-POST https://localhost:7023/User/Authenticate
+POST https://localhost:5107/User/Authenticate
 ```
 
 **Headers:**
