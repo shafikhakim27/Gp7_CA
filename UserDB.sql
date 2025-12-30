@@ -1,58 +1,31 @@
--- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
---
--- Host: localhost    Database: usermobiledevca
--- ------------------------------------------------------
--- Server version	8.0.43
+-- Setup of Database, run selected instruction when necessary
+DROP DATABASE IF EXISTS userDB;
+CREATE DATABASE userDB;
+USE userDB;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+-- Create User table
+CREATE TABLE IF NOT EXISTS `User` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `username` VARCHAR(255) NOT NULL UNIQUE,
+    `password` VARCHAR(255) NOT NULL,
+    `completionTime` DOUBLE DEFAULT NULL,
+    `isPaidUser` TINYINT(1) NULL DEFAULT NULL
+    );
 
---
--- Table structure for table `user`
---
+-- Insert 5 free users
+INSERT INTO `User` (`username`, `password`, `completionTime`, `isPaidUser`) VALUES
+('shirley', '123', NULL, 0),
+('george', '123', 45.5, 0),
+('chenyu', '123', NULL, 0),
+('haoting', '123', 120.75, 0),
+('frescylia', '123', 90.0, 0);
 
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `id` int NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `completionTime` double DEFAULT NULL,
-  `isPaidUser` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Insert 2 paid users
+INSERT INTO `User` (`username`, `password`, `completionTime`, `isPaidUser`) VALUES
+('shaq', '12345', 30.25, 1),
+('shaw', '12345', NULL, 1);
 
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'shirley','shirley',NULL,0),(2,'frescylia','frescylia',NULL,0),(3,'haoting','haoting',NULL,0),(4,'chengyu','chengyu',NULL,0),(5,'shafik','shafik',NULL,0),(6,'george','george',NULL,1);
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping routines for database 'usermobiledevca'
---
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2025-12-28 14:23:19
+-- View results
+SHOW TABLES;
+DESCRIBE User;
+SELECT * FROM User;
